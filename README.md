@@ -1,7 +1,7 @@
 # News App - Personalized News Recommendations
 
 A production-ready news application with personalized recommendations, built with React frontend and Flask backend.
-
+A Project for better news.
 ## Features
 
 - **Personalized News Recommendations**: AI-powered article recommendations based on user interests
