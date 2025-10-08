@@ -1,15 +1,18 @@
 # NewsHub - Professional News Application
 
-A modern, production-ready news application built with React and Flask, featuring GNews API integration, smart caching, and category-specific news distribution.
+A modern, production-ready news application built with React and Flask, featuring GNews API integration, smart caching, bilingual support (English/Telugu), and category-specific news distribution.
 
 ## 🚀 Features
 
 - **Real-time News**: Fresh Indian news from GNews API
+- **Bilingual Support**: Complete English ↔ Telugu language toggle
 - **Smart Categories**: 11 categories with intelligent content filtering
 - **Efficient Caching**: 30-minute smart caching reduces API calls by 90%
-- **Professional UI**: Modern, responsive design with dark mode
+- **Modern UI**: Responsive design with collapsible sidebar and grid layout
+- **Google OAuth**: Professional authentication system
+- **AI Summaries**: Side peek panel with article summaries
 - **Category Distribution**: Single API fetch distributed across categories by keywords
-- **Rate Limiting**: Intelligent API usage management (48/100 requests per day)
+- **Rate Limiting**: Intelligent API usage management
 
 ## 🏗️ Architecture
 
