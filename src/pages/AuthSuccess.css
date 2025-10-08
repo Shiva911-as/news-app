@@ -1,0 +1,152 @@
+/**
+ * AuthSuccess Page Styles
+ * Professional authentication success page
+ */
+
+.auth-success-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 20px;
+}
+
+.auth-success-content {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
+  padding: 60px 40px;
+  text-align: center;
+  max-width: 400px;
+  width: 100%;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.success-icon {
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 24px;
+  font-size: 36px;
+  color: white;
+  font-weight: bold;
+  animation: successPulse 2s ease-in-out infinite;
+}
+
+.error-icon {
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 24px;
+  font-size: 36px;
+  color: white;
+  font-weight: bold;
+}
+
+.auth-success-content h2 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0 0 16px 0;
+  line-height: 1.2;
+}
+
+.auth-success-content p {
+  font-size: 16px;
+  color: #6b7280;
+  margin: 0 0 12px 0;
+  line-height: 1.5;
+}
+
+.redirect-message {
+  font-size: 14px;
+  color: #9ca3af;
+  font-style: italic;
+}
+
+.retry-button {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  border-radius: 12px;
+  padding: 14px 28px;
+  font-size: 16px;
+  font-weight: 600;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 20px;
+}
+
+.retry-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #f3f4f6;
+  border-top: 4px solid #667eea;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 24px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes successPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .auth-success-content {
+    background: rgba(31, 41, 55, 0.95);
+    border-color: rgba(75, 85, 99, 0.3);
+  }
+  
+  .auth-success-content h2 {
+    color: #f9fafb;
+  }
+  
+  .auth-success-content p {
+    color: #d1d5db;
+  }
+  
+  .redirect-message {
+    color: #9ca3af;
+  }
+}
+
+/* Responsive design */
+@media (max-width: 480px) {
+  .auth-success-content {
+    padding: 40px 24px;
+    border-radius: 16px;
+  }
+  
+  .auth-success-content h2 {
+    font-size: 24px;
+  }
+  
+  .success-icon,
+  .error-icon {
+    width: 60px;
+    height: 60px;
+    font-size: 28px;
+  }
+}

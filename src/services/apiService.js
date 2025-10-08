@@ -68,4 +68,23 @@ export const apiService = {
   getRecommendations: async () => {
     return api.get('/api/recommendations');
   },
+
+  // Indian news endpoint
+  getIndianNews: async (pageSize = 20) => {
+    return api.get(`/api/news/indian?page_size=${pageSize}`);
+  },
+
+  // Sports news endpoints
+  getSportsNews: async (pageSize = 20) => {
+    return api.get(`/api/news/sports?page_size=${pageSize}`);
+  },
+
+  getCricketNews: async (pageSize = 20) => {
+    return api.get(`/api/news/cricket?page_size=${pageSize}`);
+  },
+
+  // Technology news endpoint
+  getTechnologyNews: async (pageSize = 20) => {
+    return api.get(`/api/news/technology?page_size=${pageSize}`);
+  },
 };

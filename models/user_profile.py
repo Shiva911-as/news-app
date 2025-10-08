@@ -166,7 +166,7 @@ class UserProfile:
     
     def score_article(self, article: Dict[str, any]) -> float:
         """
-        Score an article based on user interests
+        Enhanced scoring for articles based on user interests and quality
         
         Args:
             article: Article data
@@ -176,15 +176,37 @@ class UserProfile:
         """
         title = (article.get('title') or "").lower()
         description = (article.get('description') or "").lower()
+        source_name = (article.get('source', {}).get('name') or "").lower()
         content = f"{title} {description}"
         
         score = 0.0
         
+        # Base scoring from user interests
         for topic, weight in self.interests.items():
             if topic in content:
                 score += weight
         
-        return score
+        # Boost for Indian context (since user is based in India)
+        indian_indicators = ['india', 'indian', 'delhi', 'mumbai', 'bangalore', 'modi', 'rupee', 'parliament']
+        indian_matches = sum(1 for indicator in indian_indicators if indicator in content)
+        score += indian_matches * 0.5
+        
+        # Boost for technology and global affairs (user preferences)
+        tech_global_keywords = ['technology', 'ai', 'startup', 'innovation', 'global', 'international', 'climate', 'economy']
+        tech_matches = sum(1 for keyword in tech_global_keywords if keyword in content)
+        score += tech_matches * 0.4
+        
+        # Penalize entertainment/celebrity content
+        entertainment_keywords = ['celebrity', 'bollywood', 'gossip', 'viral', 'scandal']
+        entertainment_matches = sum(1 for keyword in entertainment_keywords if keyword in content)
+        score -= entertainment_matches * 1.0
+        
+        # Boost for quality sources
+        quality_sources = ['times', 'hindu', 'economic', 'mint', 'wire', 'scroll', 'firstpost']
+        if any(source in source_name for source in quality_sources):
+            score += 1.0
+        
+        return max(0.0, score)
     
     def get_recommendations(self, articles: List[Dict[str, any]], limit: int = 10) -> List[Tuple[float, Dict[str, any]]]:
         """
@@ -223,3 +245,63 @@ class UserProfile:
             'articles_read': len(self.read_history),
             'last_updated': self.last_updated
         }
+    
+    def initialize_indian_user_preferences(self) -> None:
+        """Initialize profile with Indian-focused interests for new users."""
+        if not self.interests or len(self.interests) == 0:
+            # Set default Indian-focused interests
+            default_interests = {
+                'indian_politics': 2.0,
+                'indian_economy': 2.0,
+                'technology': 2.5,
+                'global_affairs': 2.0,
+                'indian_regional': 1.5,
+                'science_research': 1.5,
+                'infrastructure': 1.0,
+                'education': 1.0
+            }
+            
+            self.interests.update(default_interests)
+            self._ensure_related_topics()
+            self._save_profile()
+            logger.info(f"Initialized Indian user preferences for {self.user_id}")
+    
+    def get_indian_focused_recommendations(self, articles: List[Dict[str, any]], limit: int = 10) -> List[Tuple[float, Dict[str, any]]]:
+        """
+        Get recommendations with enhanced Indian focus and quality filtering.
+        
+        Args:
+            articles: List of articles to score
+            limit: Maximum number of recommendations
+            
+        Returns:
+            List of (score, article) tuples sorted by relevance
+        """
+        # Ensure user has Indian preferences
+        self.initialize_indian_user_preferences()
+        
+        scored_articles = []
+        seen_titles = set()
+        
+        for article in articles:
+            # Skip duplicates
+            title = (article.get('title') or '').strip().lower()
+            if title in seen_titles or not title:
+                continue
+            seen_titles.add(title)
+            
+            # Skip articles without proper content
+            if not article.get('description'):
+                continue
+            
+            score = self.score_article(article)
+            
+            # Only include articles with meaningful scores
+            if score > 0.5:
+                scored_articles.append((score, article))
+        
+        # Sort by score (highest first)
+        scored_articles.sort(key=lambda x: x[0], reverse=True)
+        
+        logger.info(f"Generated {len(scored_articles)} Indian-focused recommendations from {len(articles)} articles")
+        return scored_articles[:limit]

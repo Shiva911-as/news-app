@@ -1,0 +1,347 @@
+/* Modern Sidebar Styles */
+.sidebar {
+  height: calc(100vh - 60px);
+  background: linear-gradient(180deg, #4c1d95 0%, #374151 100%);
+  border-right: 1px solid #444;
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  left: 0;
+  top: 60px; /* Account for header height */
+  z-index: 100;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #666 transparent;
+  transition: width 0.3s ease;
+}
+
+.sidebar-open {
+  width: 240px;
+}
+
+.sidebar-closed {
+  width: 0px !important;
+  overflow: hidden;
+  border: none;
+  visibility: hidden;
+}
+
+.sidebar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+  background: #2d2d2d;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+  background: #555;
+  border-radius: 3px;
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover {
+  background: #666;
+}
+
+/* Header */
+.sidebar-header {
+  padding: 24px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-title {
+  color: #ffffff;
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0 0 20px 0;
+  text-align: center;
+  letter-spacing: 0.5px;
+}
+
+.language-toggle {
+  display: flex;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 4px;
+}
+
+.language-btn {
+  background: none;
+  color: #ffffff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  flex: 1;
+}
+
+.language-btn:hover,
+.language-btn.active {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
+}
+
+.sidebar-nav {
+  padding: 20px 0;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+.category-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.category-item {
+  margin: 0;
+}
+
+.category-button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px 24px;
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 15px;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-radius: 0;
+  margin: 0;
+  border-left: 3px solid transparent;
+}
+
+.sidebar-open .category-button {
+  justify-content: flex-start;
+  text-align: left;
+}
+
+.sidebar-closed .category-button {
+  justify-content: center;
+  padding: 16px 8px;
+}
+
+.category-button:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  border-left-color: rgba(255, 255, 255, 0.3);
+  transform: translateX(4px);
+}
+
+.category-button:hover .category-icon {
+  transform: scale(1.1);
+  color: #3b82f6;
+}
+
+.category-button.active {
+  background: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+  font-weight: 600;
+  border-left-color: #3b82f6;
+  transform: translateX(4px);
+}
+
+.category-button.active .category-icon {
+  color: #3b82f6;
+  transform: scale(1.05);
+}
+
+/* Special styling for primary navigation items */
+.category-button[data-category="home"],
+.category-button[data-category="trending"] {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 8px;
+}
+
+.category-button[data-category="home"]:hover,
+.category-button[data-category="trending"]:hover {
+  background: rgba(59, 130, 246, 0.1);
+  border-left-color: #3b82f6;
+}
+
+.category-button[data-category="home"].active,
+.category-button[data-category="trending"].active {
+  background: rgba(59, 130, 246, 0.2);
+  border-left-color: #3b82f6;
+}
+
+.category-icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 12px;
+  flex-shrink: 0;
+  stroke-width: 1.5;
+  transition: all 0.3s ease;
+}
+
+.sidebar-closed .category-icon {
+  margin-right: 0;
+}
+
+.category-name {
+  flex: 1;
+  font-weight: 500;
+}
+
+/* Footer */
+.sidebar-footer {
+  padding: 20px 24px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  margin-top: auto;
+  flex-shrink: 0;
+}
+
+.login-button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 16px 24px;
+  background: rgba(59, 130, 246, 0.1);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  color: #3b82f6;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  margin: 0;
+}
+
+.login-button:hover {
+  background: rgba(59, 130, 246, 0.2);
+  border-color: rgba(59, 130, 246, 0.5);
+  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.login-icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 12px;
+  flex-shrink: 0;
+  stroke-width: 1.5;
+  transition: all 0.3s ease;
+}
+
+.login-text {
+  flex: 1;
+  font-weight: 600;
+}
+
+.sidebar-stats {
+  display: flex;
+  justify-content: center;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.stat-label {
+  color: #888;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.stat-value {
+  color: #3b82f6;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .sidebar {
+    width: 240px;
+  }
+  
+  .category-button {
+    padding: 14px 20px;
+    font-size: 15px;
+  }
+  
+  .sidebar-title {
+    font-size: 22px;
+  }
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    width: 200px;
+  }
+  
+  .category-button {
+    padding: 12px 16px;
+    font-size: 14px;
+  }
+  
+  .category-name {
+    display: none;
+  }
+  
+  .sidebar-title .sidebar-icon {
+    font-size: 24px;
+  }
+  
+  .sidebar-title {
+    font-size: 20px;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 640px) {
+  .sidebar {
+    width: 60px;
+  }
+  
+  .sidebar-header {
+    padding: 16px 8px;
+  }
+  
+  .sidebar-title {
+    font-size: 0;
+    justify-content: center;
+  }
+  
+  .sidebar-title .sidebar-icon {
+    font-size: 28px;
+  }
+  
+  .category-button {
+    padding: 16px 8px;
+    justify-content: center;
+  }
+  
+  .category-name {
+    display: none;
+  }
+  
+  .sidebar-footer {
+    padding: 16px 8px;
+  }
+  
+  .stat-label,
+  .stat-value {
+    font-size: 10px;
+  }
+}

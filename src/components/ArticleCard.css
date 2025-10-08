@@ -1,4 +1,4 @@
-/* Modern Article Card with Thumbnail Layout */
+/* Modern Article Card - Text Only Layout */
 .article-card {
   background: linear-gradient(180deg, var(--surface-1), var(--surface-2));
   border-radius: var(--radius-2xl);
@@ -7,11 +7,10 @@
   overflow: hidden;
   border: 1px solid var(--border-light);
   position: relative;
-  display: flex;
-  gap: var(--space-lg);
+  display: block;
   padding: var(--space-lg);
   height: auto;
-  min-height: 140px;
+  min-height: 120px;
 }
 
 .article-card:hover {
@@ -38,57 +37,6 @@
   min-height: 180px;
 }
 
-/* Thumbnail Image */
-.article-thumbnail {
-  flex-shrink: 0;
-  width: 120px;
-  height: 80px;
-  position: relative;
-}
-
-.article-card--compact .article-thumbnail {
-  width: 100px;
-  height: 70px;
-}
-
-.article-card--featured .article-thumbnail {
-  width: 160px;
-  height: 100px;
-}
-
-.thumbnail-wrapper {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  border-radius: var(--radius);
-  overflow: hidden;
-  background: var(--bg-tertiary);
-}
-
-.thumbnail-skeleton {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  border-radius: var(--radius);
-}
-
-.thumbnail-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform var(--transition);
-  opacity: 0;
-}
-
-.thumbnail-image.loaded {
-  opacity: 1;
-}
-
-.article-card:hover .thumbnail-image {
-  transform: scale(1.05);
-}
 
 .score-badge {
   position: absolute;
@@ -195,8 +143,8 @@
   line-height: 1.3;
   margin: 0;
   display: -webkit-box;
-  line-clamp: 2;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -204,8 +152,8 @@
 
 .article-card--featured .article-title {
   font-size: 1.25rem;
-  line-clamp: 3;
   -webkit-line-clamp: 3;
+  line-clamp: 3;
 }
 
 /* AI Summary */
@@ -247,8 +195,8 @@
   line-height: 1.5;
   font-size: 0.85rem;
   display: -webkit-box;
-  line-clamp: 2;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -355,13 +303,7 @@
 @media (max-width: 768px) {
   .article-card {
     padding: var(--space-md);
-    gap: var(--space-md);
-    min-height: 120px;
-  }
-  
-  .article-thumbnail {
-    width: 100px;
-    height: 70px;
+    min-height: 100px;
   }
   
   .article-content {
@@ -371,6 +313,7 @@
   .article-title {
     font-size: 1rem;
     -webkit-line-clamp: 2;
+    line-clamp: 2;
   }
   
   .ai-summary {
@@ -395,13 +338,7 @@
 @media (max-width: 480px) {
   .article-card {
     padding: var(--space-sm) var(--space-md);
-    gap: var(--space-sm);
-    min-height: 100px;
-  }
-  
-  .article-thumbnail {
-    width: 80px;
-    height: 60px;
+    min-height: 80px;
   }
   
   .article-title {

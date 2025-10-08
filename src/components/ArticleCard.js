@@ -1,19 +1,41 @@
 import React, { useState } from 'react';
 import { FaExternalLinkAlt, FaClock, FaStar, FaBookmark, FaRegBookmark, FaShare, FaHeart, FaRegHeart } from 'react-icons/fa';
 import ArticleSchema from './ArticleSchema';
-import OptimizedImage from './OptimizedImage';
 import './ArticleCard.css';
 
-const ArticleCard = ({ article, score, onRead, showScore = true, variant = 'default', isTrending = false, trendingRank = null }) => {
+const ArticleCard = ({ 
+  article, 
+  score, 
+  onRead, 
+  onClick, 
+  showScore = true, 
+  variant = 'default', 
+  isTrending = false, 
+  trendingRank = null 
+}) => {
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
 
-  const handleRead = () => {
+  const handleCardClick = () => {
+    if (onClick) {
+      onClick(article);
+    } else if (onRead) {
+      onRead(article);
+    }
+  };
+
+  const handleRead = (e) => {
+    e.stopPropagation();
     if (onRead) {
       onRead(article);
     }
-    if (article.url) {
+    
+    // Check if URL is valid and not a placeholder
+    if (article.url && !article.url.includes('example.com') && !article.url.includes('placeholder')) {
       window.open(article.url, '_blank', 'noopener,noreferrer');
+    } else {
+      // Show message for invalid URLs
+      alert('Article link not available. This might be from fallback data.');
     }
   };
 
@@ -60,11 +82,6 @@ const ArticleCard = ({ article, score, onRead, showScore = true, variant = 'defa
     return text.substring(0, maxLength) + '...';
   };
 
-  const getImageUrl = () => {
-    if (article.urlToImage) return article.urlToImage;
-    // Fallback to a placeholder service
-    return `https://picsum.photos/120/80?random=${Math.random()}`;
-  };
 
   const getAISummary = () => {
     // Placeholder AI summary - in a real app, this would come from your AI service
@@ -81,42 +98,33 @@ const ArticleCard = ({ article, score, onRead, showScore = true, variant = 'defa
   return (
     <>
       <ArticleSchema article={article} isMainArticle={variant === 'featured'} />
-      <article className={`article-card article-card--${variant} fade-in bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-xl shadow-md dark:shadow-gray-900/30 hover:shadow-lg dark:hover:shadow-gray-900/50 transition-all duration-300 hover:-translate-y-1 mb-8`}>
-      {/* Thumbnail Image */}
-      <div className="article-thumbnail flex-shrink-0 w-32 h-20 md:w-40 md:h-24">
-        <div className="thumbnail-wrapper relative w-full h-full rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-700">
-          <OptimizedImage
-            src={getImageUrl()}
-            alt={article.title}
-            width={variant === 'featured' ? 160 : variant === 'compact' ? 100 : 120}
-            height={variant === 'featured' ? 100 : variant === 'compact' ? 70 : 80}
-            className="w-full h-full hover:scale-105 transition-transform duration-300"
-            priority={variant === 'featured'}
-            quality={85}
-          />
-          {isTrending && trendingRank && (
-            <div className="trending-badge absolute top-2 right-2 bg-gradient-to-r from-orange-500 to-red-500 text-white px-2 py-1 rounded-md text-xs font-bold flex items-center gap-1 shadow-lg animate-pulse">
-              <span className="trending-icon">🔥</span>
-              <span className="trending-rank">#{trendingRank}</span>
-            </div>
-          )}
-          {showScore && score && !isTrending && (
-            <div className="score-badge absolute top-2 right-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white px-2 py-1 rounded-md text-xs font-semibold flex items-center gap-1 shadow-lg">
-              <FaStar className="w-3 h-3" />
-              {score.toFixed(1)}
-            </div>
-          )}
-        </div>
-      </div>
-
+      <article 
+        className={`article-card article-card--${variant} fade-in bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-xl shadow-md dark:shadow-gray-900/30 hover:shadow-lg dark:hover:shadow-gray-900/50 transition-all duration-300 hover:-translate-y-1 mb-8 p-6 cursor-pointer`}
+        onClick={handleCardClick}
+      >
+      
       {/* Article Content */}
-      <div className="article-content flex-1 flex flex-col gap-2 min-w-0">
+      <div className="article-content flex flex-col gap-2 w-full">
         <div className="article-meta-top flex justify-between items-center gap-2 mb-3">
-          {article.source?.name && (
-            <span className="article-source font-bold text-blue-600 dark:text-blue-400 text-sm uppercase tracking-wide">
-              {article.source.name}
-            </span>
-          )}
+          <div className="flex items-center gap-3">
+            {article.source?.name && (
+              <span className="article-source font-bold text-blue-600 dark:text-blue-400 text-sm uppercase tracking-wide">
+                {article.source.name}
+              </span>
+            )}
+            {isTrending && trendingRank && (
+              <div className="trending-badge bg-gradient-to-r from-orange-500 to-red-500 text-white px-2 py-1 rounded-md text-xs font-bold flex items-center gap-1 shadow-lg animate-pulse">
+                <span className="trending-icon">🔥</span>
+                <span className="trending-rank">#{trendingRank}</span>
+              </div>
+            )}
+            {showScore && score && !isTrending && (
+              <div className="score-badge bg-gradient-to-r from-blue-500 to-purple-500 text-white px-2 py-1 rounded-md text-xs font-semibold flex items-center gap-1 shadow-lg">
+                <FaStar className="w-3 h-3" />
+                {score.toFixed(1)}
+              </div>
+            )}
+          </div>
           {article.publishedAt && (
             <span className="article-date text-sm text-gray-500 dark:text-gray-400 flex items-center gap-1 font-medium">
               <FaClock className="w-3 h-3" />

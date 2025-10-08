@@ -91,16 +91,45 @@
   box-sizing: border-box;
 }
 
-body {
+html, body {
   margin: 0;
+  padding: 0;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+#root {
+  width: 100%;
+  max-width: 100%;
+  background-color: #0f0f0f !important;
+  color: #ffffff !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  min-height: 100vh;
+}
+
+body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: var(--bg-primary);
-  color: var(--text-primary);
+  background-color: #0f0f0f !important;
+  color: #ffffff !important;
   transition: background-color 0.25s ease, color 0.25s ease;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* Force dark theme */
+html {
+  background-color: #0f0f0f !important;
+}
+
+/* Ensure all elements use dark theme */
+* {
+  color: inherit !important;
 }
 
 code {

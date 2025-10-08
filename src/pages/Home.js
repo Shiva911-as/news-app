@@ -1,103 +1,147 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useUser } from '../context/UserContext';
 import { apiService } from '../services/apiService';
-import ArticleCard from '../components/ArticleCard';
-import UserProfileCard from '../components/UserProfileCard';
+import ArticleBox from '../components/ArticleBox';
 import toast from 'react-hot-toast';
-import { FaNewspaper, FaUserCog, FaFire, FaSpinner } from 'react-icons/fa';
+import { FaSpinner, FaExclamationTriangle } from 'react-icons/fa';
 import './Home.css';
 
-const Home = () => {
-  const { user, learnFromArticle } = useUser();
-  const [recommendations, setRecommendations] = useState([]);
-  const [trendingNews, setTrendingNews] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [trendingLoading, setTrendingLoading] = useState(false);
+const Home = ({ selectedCategory, onArticleSelect, selectedArticle }) => {
+  const { learnFromArticle } = useUser();
+  const [articles, setArticles] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [trendingPage, setTrendingPage] = useState(1);
-  const [hasMoreTrending, setHasMoreTrending] = useState(true);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
 
+  // Load articles when category changes
   useEffect(() => {
-    loadData();
-  }, []);
+    if (selectedCategory) {
+      loadCategoryArticles();
+    }
+  }, [selectedCategory]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const loadData = async () => {
+  const loadCategoryArticles = async () => {
+    if (!selectedCategory) return;
+
     try {
       setLoading(true);
       setError(null);
+      setPage(1);
 
-      // Load both recommendations and trending news
-      const [recResponse, trendingResponse] = await Promise.all([
-        apiService.getRecommendations(),
-        apiService.getTrendingNews(10)
-      ]);
-
-      if (recResponse.success) {
-        setRecommendations(recResponse.recommendations);
-      }
-
-      if (trendingResponse.success) {
-        setTrendingNews(trendingResponse.articles);
-        setTrendingPage(1);
-        setHasMoreTrending(trendingResponse.has_more || false);
+      const response = await fetchCategoryData(selectedCategory);
+      
+      if (response.success) {
+        setArticles(response.articles || []);
+        setHasMore(response.has_more || false);
+      } else {
+        setError(response.error || 'Failed to load articles');
       }
     } catch (err) {
-      setError('Failed to load news');
-      console.error('Error loading data:', err);
-      toast.error('Failed to load news');
+      setError('Failed to load articles');
+      console.error('Error loading category articles:', err);
+      toast.error('Failed to load articles');
     } finally {
       setLoading(false);
     }
   };
 
-  const loadMoreTrending = useCallback(async () => {
-    if (trendingLoading || !hasMoreTrending) return;
+  const fetchCategoryData = async (category) => {
+    const endpoint = category.endpoint;
+    
+    // Use the new category endpoint for all categories
+    if (endpoint.includes('/api/news/category/')) {
+      try {
+        const response = await fetch(endpoint + '?page_size=8');
+        const data = await response.json();
+        
+        if (data.status === 'success') {
+          return {
+            success: true,
+            articles: data.articles || [],
+            has_more: false
+          };
+        } else {
+          return {
+            success: false,
+            error: data.message || 'Failed to fetch category news'
+          };
+        }
+      } catch (error) {
+        return {
+          success: false,
+          error: 'Network error: ' + error.message
+        };
+      }
+    }
+    
+    // Fallback for any legacy endpoints
+    return await apiService.getTrendingNews(8);
+  };
+
+  const loadMoreArticles = useCallback(async () => {
+    if (loading || !hasMore || !selectedCategory) return;
 
     try {
-      setTrendingLoading(true);
-      const nextPage = trendingPage + 1;
-      const response = await apiService.getTrendingNews(10, nextPage);
+      setLoading(true);
+      const nextPage = page + 1;
+      const response = await fetchCategoryData(selectedCategory);
       
       if (response.success) {
-        setTrendingNews(prev => [...prev, ...response.articles]);
-        setTrendingPage(nextPage);
-        setHasMoreTrending(response.has_more || false);
+        setArticles(prev => [...prev, ...response.articles]);
+        setPage(nextPage);
+        setHasMore(response.has_more || false);
       }
     } catch (err) {
-      console.error('Error loading more trending news:', err);
-      toast.error('Failed to load more trending news');
+      console.error('Error loading more articles:', err);
+      toast.error('Failed to load more articles');
     } finally {
-      setTrendingLoading(false);
+      setLoading(false);
     }
-  }, [trendingLoading, hasMoreTrending, trendingPage]);
+  }, [loading, hasMore, selectedCategory, page]);
 
-  const handleArticleRead = async (article) => {
+  const handleArticleClick = async (article) => {
+    // Learn from article interaction
     try {
-      const result = await learnFromArticle(article);
-      if (result.success) {
-        toast.success('Learning from your reading preferences!');
-        // Reload recommendations after learning
-        setTimeout(loadData, 1000);
-      }
+      await learnFromArticle(article);
     } catch (err) {
       console.error('Error learning from article:', err);
     }
+    
+    // Select article for summary panel
+    onArticleSelect(article);
   };
 
-  if (loading) {
+  if (!selectedCategory) {
     return (
-      <div className="container">
-        <div className="loading">
-          <FaNewspaper className="loading-icon" />
-          <p>Loading your personalized news...</p>
+      <div className="home-container">
+        <div className="welcome-message">
+          <h2>Welcome to News</h2>
+          <p>Select a category from the sidebar to start reading news</p>
         </div>
-        <div className="loading-skeleton">
-          {[...Array(6)].map((_, index) => (
-            <div key={index} className="skeleton-card">
-              <div className="skeleton skeleton-image"></div>
-              <div className="skeleton skeleton-title"></div>
-              <div className="skeleton skeleton-description"></div>
-              <div className="skeleton skeleton-description"></div>
+      </div>
+    );
+  }
+
+  if (loading && articles.length === 0) {
+    return (
+      <div className="home-container">
+        <div className="category-header">
+          <h1>
+            <span className="category-icon">{selectedCategory.icon}</span>
+            {selectedCategory.name}
+          </h1>
+        </div>
+        <div className="loading-state">
+          <FaSpinner className="loading-spinner" />
+          <p>Loading {selectedCategory.name.toLowerCase()} news...</p>
+        </div>
+        <div className="articles-grid-skeleton">
+          {[...Array(8)].map((_, index) => (
+            <div key={index} className="article-skeleton">
+              <div className="skeleton-title"></div>
+              <div className="skeleton-description"></div>
+              <div className="skeleton-meta"></div>
             </div>
           ))}
         </div>
@@ -107,10 +151,18 @@ const Home = () => {
 
   if (error) {
     return (
-      <div className="container">
-        <div className="error">
+      <div className="home-container">
+        <div className="category-header">
+          <h1>
+            <span className="category-icon">{selectedCategory.icon}</span>
+            {selectedCategory.name}
+          </h1>
+        </div>
+        <div className="error-state">
+          <FaExclamationTriangle className="error-icon" />
+          <h3>Failed to load articles</h3>
           <p>{error}</p>
-          <button className="btn btn-primary" onClick={loadData}>
+          <button className="retry-button" onClick={loadCategoryArticles}>
             Try Again
           </button>
         </div>
@@ -119,98 +171,60 @@ const Home = () => {
   }
 
   return (
-    <div className="container">
-      <div className="home-grid">
-        <div className="main-content">
-          {/* User Profile Card */}
-          <UserProfileCard user={user} />
-
-          {/* Personalized Recommendations */}
-          <section className="news-section">
-            <div className="section-header">
-              <h2>
-                <FaNewspaper />
-                Your Personalized News
-              </h2>
-              <p>Articles tailored to your interests</p>
-            </div>
-
-            {recommendations.length > 0 ? (
-              <div className="articles-grid articles-grid--featured">
-                {recommendations.map((rec, index) => (
-                  <ArticleCard
-                    key={`${rec.article.url}-${index}`}
-                    article={rec.article}
-                    score={rec.score}
-                    onRead={handleArticleRead}
-                    variant={index === 0 ? 'featured' : 'default'}
-                  />
-                ))}
-              </div>
-            ) : (
-              <div className="no-recommendations">
-                <FaUserCog />
-                <h3>No personalized recommendations yet</h3>
-                <p>Set up your interests to get personalized news recommendations</p>
-                <a href="/setup" className="btn btn-primary">
-                  Set Up Interests
-                </a>
-              </div>
-            )}
-          </section>
-
-          {/* Trending News */}
-          <section className="news-section trending-section">
-            <div className="section-header">
-              <h2>
-                <FaFire />
-                Trending News
-              </h2>
-              <p>What's happening around the world right now</p>
-            </div>
-
-            {trendingNews.length > 0 ? (
-              <>
-                <div className="articles-grid articles-grid--trending">
-                  {trendingNews.map((article, index) => (
-                    <div key={`${article.url}-${index}`} className="trending-article-wrapper">
-                      <ArticleCard
-                        article={article}
-                        onRead={handleArticleRead}
-                        showScore={false}
-                        variant="default"
-                        isTrending={true}
-                        trendingRank={index + 1}
-                      />
-                    </div>
-                  ))}
-                </div>
-                
-                {hasMoreTrending && (
-                  <div className="load-more-container">
-                    <button 
-                      className="btn btn-secondary load-more-btn"
-                      onClick={loadMoreTrending}
-                      disabled={trendingLoading}
-                    >
-                      {trendingLoading ? (
-                        <>
-                          <FaSpinner className="spinner" />
-                          Loading more...
-                        </>
-                      ) : (
-                        'Load More Trending News'
-                      )}
-                    </button>
-                  </div>
-                )}
-              </>
-            ) : (
-              <p>No trending news available</p>
-            )}
-          </section>
-        </div>
+    <div className="home-container">
+      <div className="category-header">
+        <h1>
+          {selectedCategory.icon && (
+            <selectedCategory.icon className="category-header-icon" size={28} strokeWidth={1.5} />
+          )}
+          {selectedCategory.name}
+        </h1>
+        <p className="category-description">
+          {selectedCategory.id === 'home' ? 
+            `${articles.length} personalized recommendations` : 
+            `${articles.length} articles available`
+          }
+        </p>
       </div>
+
+      {articles.length > 0 ? (
+        <>
+          <div className="articles-grid">
+            {articles.slice(0, 8).map((article, index) => (
+              <ArticleBox
+                key={`${article.url}-${index}`}
+                article={article}
+                onClick={() => handleArticleClick(article)}
+                isSelected={selectedArticle?.url === article.url}
+              />
+            ))}
+          </div>
+          
+          {hasMore && (
+            <div className="load-more-section">
+              <button 
+                className="load-more-button"
+                onClick={loadMoreArticles}
+                disabled={loading}
+              >
+                {loading ? (
+                  <>
+                    <FaSpinner className="spinner" />
+                    Loading more...
+                  </>
+                ) : (
+                  'Load More Articles'
+                )}
+              </button>
+            </div>
+          )}
+        </>
+      ) : (
+        <div className="no-articles">
+          <h3>No articles found</h3>
+          <p>Try selecting a different category or check back later</p>
+        </div>
+      )}
     </div>
   );
 };

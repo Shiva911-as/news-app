@@ -1,0 +1,364 @@
+/* Login Page - Aceternity UI Style */
+.login-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #0a0a0a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  z-index: 1000;
+}
+
+.login-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+}
+
+.login-grid {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+  background-size: 50px 50px;
+  animation: grid-move 20s linear infinite;
+}
+
+.login-gradient {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(
+    ellipse 80% 50% at 50% 40%,
+    rgba(120, 119, 198, 0.1),
+    rgba(255, 255, 255, 0.02)
+  );
+}
+
+@keyframes grid-move {
+  0% { transform: translate(0, 0); }
+  100% { transform: translate(50px, 50px); }
+}
+
+.login-content {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 480px;
+  padding: 20px;
+}
+
+.back-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.7);
+  padding: 12px 20px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-bottom: 40px;
+  backdrop-filter: blur(10px);
+}
+
+.back-button:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.9);
+  transform: translateY(-1px);
+}
+
+.login-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 24px;
+  padding: 48px 40px;
+  backdrop-filter: blur(20px);
+  box-shadow: 
+    0 20px 25px -5px rgba(0, 0, 0, 0.3),
+    0 10px 10px -5px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.login-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+}
+
+.login-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.login-title {
+  font-size: 32px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 16px 0;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.brand-name {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 800;
+}
+
+.login-subtitle {
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.6);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.login-form {
+  margin-bottom: 32px;
+}
+
+.professional-signin {
+  width: 100%;
+  min-height: 48px;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.google-login-button {
+  width: 100%;
+  position: relative;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  border-radius: 16px;
+  padding: 18px 24px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #ffffff;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  overflow: hidden;
+  box-shadow: 
+    0 10px 20px rgba(102, 126, 234, 0.3),
+    0 4px 8px rgba(102, 126, 234, 0.2);
+}
+
+.google-login-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transition: left 0.5s ease;
+}
+
+.google-login-button:hover::before {
+  left: 100%;
+}
+
+.google-login-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 15px 30px rgba(102, 126, 234, 0.4),
+    0 8px 16px rgba(102, 126, 234, 0.3);
+}
+
+.google-login-button:active {
+  transform: translateY(0);
+}
+
+.google-login-button.loading {
+  cursor: not-allowed;
+  opacity: 0.8;
+}
+
+.button-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  position: relative;
+  z-index: 2;
+}
+
+.google-icon {
+  flex-shrink: 0;
+  transition: transform 0.3s ease;
+}
+
+.google-login-button:hover .google-icon {
+  transform: scale(1.1);
+}
+
+.button-text {
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.loading-spinner {
+  position: absolute;
+  top: 50%;
+  right: 20px;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top: 2px solid #ffffff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: translateY(-50%) rotate(0deg); }
+  100% { transform: translateY(-50%) rotate(360deg); }
+}
+
+.login-footer {
+  text-align: center;
+}
+
+.terms-text {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.5);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.terms-link {
+  color: rgba(255, 255, 255, 0.7);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.terms-link:hover {
+  color: #667eea;
+  text-decoration: underline;
+}
+
+/* Responsive Design */
+@media (max-width: 640px) {
+  .login-content {
+    padding: 16px;
+  }
+  
+  .login-card {
+    padding: 32px 24px;
+  }
+  
+  .login-title {
+    font-size: 28px;
+  }
+  
+  .login-form {
+    padding: 16px 20px;
+  }
+  
+  .google-login-button {
+    padding: 16px 20px;
+    font-size: 15px;
+  }
+  
+  .back-button {
+    padding: 10px 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .login-title {
+    font-size: 24px;
+  }
+  
+  .login-card {
+    padding: 28px 20px;
+  }
+}
+
+/* Dark mode compatibility */
+@media (prefers-color-scheme: light) {
+  .login-container {
+    background: #fafafa;
+  }
+  
+  .login-grid {
+    background-image: 
+      linear-gradient(rgba(0, 0, 0, 0.02) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 0, 0, 0.02) 1px, transparent 1px);
+  }
+  
+  .login-gradient {
+    background: radial-gradient(
+      ellipse 80% 50% at 50% 40%,
+      rgba(120, 119, 198, 0.05),
+      rgba(0, 0, 0, 0.01)
+    );
+  }
+  
+  .login-card {
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+  }
+  
+  .login-title {
+    color: #1a1a1a;
+  }
+  
+  .login-subtitle {
+    color: rgba(0, 0, 0, 0.6);
+  }
+  
+  .terms-text {
+    color: rgba(0, 0, 0, 0.5);
+  }
+  
+  .terms-link {
+    color: rgba(0, 0, 0, 0.7);
+  }
+  
+  .back-button {
+    background: rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    color: rgba(0, 0, 0, 0.7);
+  }
+  
+  .back-button:hover {
+    background: rgba(0, 0, 0, 0.08);
+    border-color: rgba(0, 0, 0, 0.2);
+    color: rgba(0, 0, 0, 0.9);
+  }
+}
