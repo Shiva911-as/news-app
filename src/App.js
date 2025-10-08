@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
-import { Home as HomeIcon } from 'lucide-react';
 import './App.css';
 
 // Simple News App Component
